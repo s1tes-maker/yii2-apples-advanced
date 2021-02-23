@@ -34,6 +34,28 @@ $this->title = 'My Yii Application';
                     <?php endif; ?>
                 </h4>
             </div>
+            <div class = "panel-body">
+                <?php if($status == 'висит на дереве'): ?>
+                    <?php $form = ActiveForm::begin(['action'=>'fallout']) ?>
+                    <?= Html::hiddenInput('Model[id]', $apple->id) ?>
+                    <?= Html::submitButton('Упасть с дерева', ['class' => 'btn btn-primary btn-lg', 'value' => 'submit']) ?>
+                    <?php ActiveForm::end() ?>
+                <?php elseif ($status != 'гнилое'): ?>
+                    <?php $form = ActiveForm::begin(['action'=>'eat', 'options' =>[
+                        'class'=>'form-inline']]) ?>
+                    <?= Html::hiddenInput('Model[id]', $apple->id) ?>
+
+                    <?= $form->field( $apple,'eaten', [
+                        'options'=>['class'=>'form-group mx-sm-3 mb-2 col-xs-3']])
+                        ->textInput(['class' =>'form-control', 'maxlength' => 3, 'autocomplete'=>"off"])
+                        ->label(false)
+                        ->widget(\yii\widgets\MaskedInput::class,
+                            ['clientOptions' =>['alias' => 'decimal', 'digits' => 3, 'mask'=>'999']]) ?>
+
+                    <?= Html::submitButton('Откусить в % от остатка', ['class' => 'btn btn-warning mb-2', 'value' => 'submit']) ?>
+                    <?php ActiveForm::end() ?>
+                <?php endif;?>
+            </div>
         </div>
         <?php endforeach; endif;?>
     </div>
