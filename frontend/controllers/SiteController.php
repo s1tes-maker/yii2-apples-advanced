@@ -107,7 +107,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Logs in a user.
+     * Logs in a group.
      *
      * @return mixed
      */
@@ -118,6 +118,9 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+
+        $model_group = UserGroup::find()->all();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
@@ -125,6 +128,7 @@ class SiteController extends Controller
 
             return $this->render('login', [
                 'model' => $model,
+                'model_group' => $model_group
             ]);
         }
     }
