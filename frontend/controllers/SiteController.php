@@ -8,7 +8,7 @@ use yii\filters\AccessControl;
 use common\models\LoginForm;
 use common\components\AppleComponent as apple;
 use common\models\Apple as modelApple;
-
+use common\models\UserGroup;
 
 /**
  * Site controller
