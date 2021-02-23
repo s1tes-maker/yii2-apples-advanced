@@ -78,7 +78,28 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $arr_colors = ['зеленое', 'красное', 'желтое', 'темно-красное', 'светло-зеленое', 'светло-желтое'];
+        $arr_submit = Yii::$app->request->post();
+
+        if($arr_submit != []) {
+            modelApple::deleteAll();
+            $count = rand(2,10);
+            $arr_apples = [];
+            for($i = 0; $i < $count; $i++) {
+                $color = $arr_colors[rand(0,count($arr_colors)-1)];
+                $apple = new apple($color);
+                $arr_apples[] =  $apple->model;
+            }
+        } else {
+
+            //добавляем поле hours_after_fallout к выборке
+            $arr_apples = modelApple::find()
+                ->select([
+                    '{{apple}}.*',
+                    '( HOUR( TIMEDIFF ( NOW(), [[fallout_date]] ) ) )  AS hours_after_fallout'])
+                ->all();
+        }
+        return $this->render('index', ['arr_apples' =>$arr_apples]);
     }
 
     /**
