@@ -15,6 +15,10 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 
+use common\components\AppleComponent as apple;
+use common\models\Apple as modelApple;
+
+
 /**
  * Site controller
  */
