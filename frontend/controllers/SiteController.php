@@ -102,6 +102,24 @@ class SiteController extends Controller
         return $this->render('index', ['arr_apples' =>$arr_apples]);
     }
 
+    public function actionFallout() {
+        $arr_submit = Yii::$app->request->post();
+        $apple = new apple('', $arr_submit["Model"]["id"]);
+        $apple->FallOut();
+        return $this->goHome();
+    }
+
+    public function actionEat() {
+        $arr_submit = Yii::$app->request->post();
+        if(count($arr_submit)>0) {
+            $id = $arr_submit["Model"]["id"];
+            $eaten = $arr_submit["Apple"]["eaten"];
+            $apple = new apple('', $id, $eaten);
+            $apple->Eat();
+        }
+        return $this->goHome();
+    }
+
     /**
      * Logs in a user.
      *
