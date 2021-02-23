@@ -9,11 +9,11 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
-    public $username;
+    public $group_id;
     public $password;
     public $rememberMe = true;
 
-    private $_user;
+    private $_user_group;
 
 
     /**
@@ -22,12 +22,13 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
+            // password is required
+            ['password', 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            ['group_id', 'safe'],
         ];
     }
 
@@ -40,39 +41,40 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
+
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            $user_group = $this->getUserGroup();
+            if (!$user_group || !$user_group->validatePassword($this->password)) {
+                $this->addError($attribute, 'Incorrect password.');
             }
         }
     }
 
     /**
-     * Logs in a user using the provided username and password.
+     * Logs in a user using the provided  password.
      *
      * @return bool whether the user is logged in successfully
      */
     public function login()
     {
+
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return Yii::$app->user->login($this->getUserGroup(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
-        
+
         return false;
     }
 
     /**
-     * Finds user by [[username]]
+     * Finds group by [[groupname]]
      *
-     * @return User|null
+     * @return UserGroup|null
      */
-    protected function getUser()
+    protected function getUserGroup()
     {
-        if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+        if ($this->_user_group === null) {
+            $this->_user_group = UserGroup::findByGroupId($this->group_id);
         }
-
-        return $this->_user;
+        return $this->_user_group;
     }
 }
